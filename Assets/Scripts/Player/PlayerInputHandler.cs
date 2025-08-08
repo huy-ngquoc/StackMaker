@@ -14,8 +14,10 @@ namespace Game
         private InputSystemActions inputSystemActions = null!;
         private InputSystemActions.TouchActions touchActions = new();
         private InputSystemActions.KeyboardActions keyboardActions = new();
+        private InputSystemActions.MouseActions mouseActions = new();
 
-        private TouchInfo touchInfo = new();
+        private SwipeInfo touchSwipeInfo = new();
+        private SwipeInfo mouseSwipeInfo = new();
         private KeyboardInfo keyboardInfo = new();
         private MoveDirection currentMoveDirection = MoveDirection.None;
 
@@ -30,6 +32,26 @@ namespace Game
 
         public MoveDirection CurrentMoveDirection => this.currentMoveDirection;
 
+        public Vector3 MoveInput => this.currentMoveDirection switch
+        {
+            MoveDirection.None => Vector3.zero,
+            MoveDirection.Left => Vector3.left,
+            MoveDirection.Right => Vector3.right,
+            MoveDirection.Forward => Vector3.forward,
+            MoveDirection.Backward => Vector3.back,
+            _ => Vector3.zero,
+        };
+
+        public Vector3Int MoveInputInt => this.currentMoveDirection switch
+        {
+            MoveDirection.None => Vector3Int.zero,
+            MoveDirection.Left => Vector3Int.left,
+            MoveDirection.Right => Vector3Int.right,
+            MoveDirection.Forward => Vector3Int.forward,
+            MoveDirection.Backward => Vector3Int.back,
+            _ => Vector3Int.zero,
+        };
+
         public void CancelMoveInputAction() => this.currentMoveDirection = MoveDirection.None;
 
         public void Dispose()
@@ -42,12 +64,13 @@ namespace Game
             this.inputSystemActions = new InputSystemActions();
             this.touchActions = this.inputSystemActions.Touch;
             this.keyboardActions = this.inputSystemActions.Keyboard;
+            this.mouseActions = this.inputSystemActions.Mouse;
 
-            this.touchActions.Press.started += _ => this.touchInfo.StartPosition = this.touchActions.Position.ReadValue<Vector2>();
+            this.touchActions.Press.started += _ => this.touchSwipeInfo.StartPosition = this.touchActions.Position.ReadValue<Vector2>();
             this.touchActions.Press.canceled += _ =>
             {
-                this.touchInfo.EndPosition = this.touchActions.Position.ReadValue<Vector2>();
-                this.currentMoveDirection = this.touchInfo.GetMoveDirection(this.minSwipeDistance);
+                this.touchSwipeInfo.EndPosition = this.touchActions.Position.ReadValue<Vector2>();
+                this.currentMoveDirection = this.touchSwipeInfo.GetMoveDirection(this.minSwipeDistance);
             };
 
             this.keyboardActions.Move.started += context =>
@@ -56,19 +79,30 @@ namespace Game
                 this.currentMoveDirection = this.keyboardInfo.MoveDirection;
             };
             this.keyboardActions.Move.canceled += _ => this.currentMoveDirection = MoveDirection.None;
+
+            this.mouseActions.Press.started += _ => this.mouseSwipeInfo.StartPosition = this.mouseActions.Position.ReadValue<Vector2>();
+            this.mouseActions.Press.canceled += _ =>
+            {
+                this.mouseSwipeInfo.EndPosition = this.mouseActions.Position.ReadValue<Vector2>();
+                this.currentMoveDirection = this.mouseSwipeInfo.GetMoveDirection(this.minSwipeDistance);
+            };
         }
 
         private void OnEnable()
         {
             this.inputSystemActions.Enable();
+
             this.touchActions.Enable();
             this.keyboardActions.Enable();
+            this.mouseActions.Enable();
         }
 
         private void OnDisable()
         {
             this.touchActions.Disable();
             this.keyboardActions.Disable();
+            this.mouseActions.Disable();
+
             this.inputSystemActions.Disable();
         }
 
@@ -77,12 +111,12 @@ namespace Game
             this.inputSystemActions.Dispose();
         }
 
-        private struct TouchInfo : IEquatable<TouchInfo>
+        private struct SwipeInfo : IEquatable<SwipeInfo>
         {
             public Vector2 StartPosition = Vector2.zero;
             public Vector2 EndPosition = Vector2.zero;
 
-            public TouchInfo()
+            public SwipeInfo()
             {
             }
 
@@ -115,7 +149,7 @@ namespace Game
                 }
             }
 
-            public readonly bool Equals(TouchInfo other)
+            public readonly bool Equals(SwipeInfo other)
             {
                 return (this.StartPosition == other.StartPosition) && (this.EndPosition == other.EndPosition);
             }

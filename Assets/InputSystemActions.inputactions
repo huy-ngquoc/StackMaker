@@ -567,6 +567,54 @@
             ]
         },
         {
+            "name": "Mouse",
+            "id": "24867f92-290e-4d9c-9ae8-2db75616a35c",
+            "actions": [
+                {
+                    "name": "Position",
+                    "type": "Value",
+                    "id": "2e47503d-6d65-4348-b5a0-7aa4b7f4f89c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Press",
+                    "type": "Button",
+                    "id": "6ca636ae-3648-409e-b4bb-6228383033d2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e857c20b-9d5d-4fce-a39e-c7646b7ff928",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2f24f88a-5691-4374-85c5-b170248b53da",
+                    "path": "<Mouse>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "Keyboard",
             "id": "b1c2013d-d09f-4755-bbdf-ebc488856c88",
             "actions": [
