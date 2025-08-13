@@ -49,23 +49,31 @@ namespace Game
             brick.transform.localPosition = Vector3.up * yOffset;
             this.bricks.Push(brick);
 
-            this.animationTransform.localPosition = Vector3.up * (yOffset + this.brickHeight);
+            this.animationTransform.localPosition += Vector3.up * this.brickHeight;
         }
 
-        public void RemoveBrick()
+        public bool RemoveBrick()
         {
-            if (this.bricks.TryPop(out var brick))
+            if (!this.bricks.TryPop(out var brick))
             {
-                Object.Destroy(brick);
+                return false;
             }
+
+            Object.Destroy(brick);
+            this.animationTransform.localPosition -= Vector3.up * this.brickHeight;
+            return true;
         }
 
         public void ClearBrick()
         {
+            var amountToDestroy = this.bricks.Count;
+
             while (this.bricks.TryPop(out var brick))
             {
                 Object.Destroy(brick);
             }
+
+            this.animationTransform.localPosition -= this.brickHeight * amountToDestroy * Vector3.up;
         }
     }
 }

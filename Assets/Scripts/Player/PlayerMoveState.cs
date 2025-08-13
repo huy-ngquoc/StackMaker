@@ -55,6 +55,19 @@ public sealed class PlayerMoveState : PlayerState
                 Object.Destroy(go);
                 this.Controller.StackManager.AddBrick();
             }
+            else if (go.CompareTag(this.Controller.StackManager.UnbrickTag))
+            {
+                if (go.TryGetComponent<UnbrickController>(out var unbrickController))
+                {
+                    this.Controller.StackManager.RemoveBrick();
+                    unbrickController.Execute();
+                }
+                else
+                {
+                    Debug.LogError($"Game object has tag {this.Controller.StackManager.UnbrickTag} " +
+                        $"but doesn't have a component {nameof(UnbrickController)}");
+                }
+            }
         }
     }
 }
