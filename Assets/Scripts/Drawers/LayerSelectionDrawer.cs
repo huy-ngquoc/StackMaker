@@ -7,8 +7,8 @@ namespace Game;
 using UnityEditor;
 using UnityEngine;
 
-[CustomPropertyDrawer(typeof(LayerMaskSelectionAttribute))]
-public class LayerMaskSelectionDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(LayerSelectionAttribute))]
+public class LayerSelectionDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {

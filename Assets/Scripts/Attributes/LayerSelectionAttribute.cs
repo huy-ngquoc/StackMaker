@@ -6,6 +6,6 @@ using System;
 using UnityEngine;
 
 [AttributeUsage(AttributeTargets.Field)]
-public sealed class LayerMaskSelectionAttribute : PropertyAttribute
+public sealed class LayerSelectionAttribute : PropertyAttribute
 {
 }
