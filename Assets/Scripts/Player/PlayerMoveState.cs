@@ -7,6 +7,7 @@ using UnityEngine;
 public sealed class PlayerMoveState : PlayerState
 {
     private Vector3 destinationPoint = Vector3.zero;
+    private bool winning = false;
 
     public PlayerMoveState(PlayerStateMachine stateMachine)
     {
@@ -23,10 +24,25 @@ public sealed class PlayerMoveState : PlayerState
         for (int i = 1; ; ++i)
         {
             var nextPoint = this.Controller.transform.position + (i * moveInput);
-            if ((!Physics.Raycast(nextPoint, Vector3.down, out var hitInfo))
-                || hitInfo.transform.gameObject.CompareTag(this.Controller.StackManager.ObstacleTag))
+            if (!Physics.Raycast(nextPoint, Vector3.down, out var hitInfo))
             {
                 this.destinationPoint = nextPoint - moveInput;
+                this.winning = false;
+                break;
+            }
+
+            var hitGameObject = hitInfo.transform.gameObject;
+            if (hitGameObject.CompareTag(this.Controller.StackManager.ObstacleTag))
+            {
+                this.destinationPoint = nextPoint - moveInput;
+                this.winning = false;
+                break;
+            }
+
+            if (hitGameObject.CompareTag(this.Controller.StackManager.WinningTag))
+            {
+                this.destinationPoint = nextPoint - moveInput;
+                this.winning = true;
                 break;
             }
         }
@@ -43,7 +59,14 @@ public sealed class PlayerMoveState : PlayerState
 
         if (newPosition == this.destinationPoint)
         {
-            this.StateMachine.SetStateToChangeTo(this.StateMachine.IdleState);
+            if (!this.winning)
+            {
+                this.StateMachine.SetStateToChangeTo(this.StateMachine.IdleState);
+            }
+            else
+            {
+                this.StateMachine.SetStateToChangeTo(this.StateMachine.WinState);
+            }
             return;
         }
 

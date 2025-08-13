@@ -8,6 +8,10 @@ namespace Game
     public sealed class PlayerController : MonoBehaviour
     {
         [SerializeReference]
+        [ResolveComponentInChildren]
+        private Animator animator = null!;
+
+        [SerializeReference]
         [ResolveComponent]
         private PlayerInputHandler inputHandler = null!;
 
@@ -22,7 +26,11 @@ namespace Game
         [SerializeField]
         private float speed = 10;
 
+        public Animator Animator => this.animator;
+
         public PlayerInputHandler InputHandler => this.inputHandler;
+
+        public PlayerStateMachine StateMachine => this.stateMachine;
 
         public StackManager StackManager => this.stackManager;
 

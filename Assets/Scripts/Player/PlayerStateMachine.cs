@@ -17,6 +17,7 @@ namespace Game
         {
             this.IdleState = new PlayerIdleState(this);
             this.MoveState = new PlayerMoveState(this);
+            this.WinState = new PlayerWinState(this);
 
             this.currentState = this.IdleState;
         }
@@ -24,6 +25,8 @@ namespace Game
         public PlayerIdleState IdleState { get; }
 
         public PlayerMoveState MoveState { get; }
+
+        public PlayerWinState WinState { get; }
 
         public PlayerController Controller => this.controller;
 

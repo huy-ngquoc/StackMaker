@@ -36,11 +36,17 @@ namespace Game
         [TagSelection]
         private string unbrickTag = string.Empty;
 
+        [SerializeField]
+        [TagSelection]
+        private string winningTag = string.Empty;
+
         public string BrickTag => this.brickTag;
 
         public string ObstacleTag => this.obstacleTag;
 
         public string UnbrickTag => this.unbrickTag;
+
+        public string WinningTag => this.winningTag;
 
         public void AddBrick()
         {
