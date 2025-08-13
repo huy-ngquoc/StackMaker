@@ -21,6 +21,14 @@ namespace Game
         private KeyboardInfo keyboardInfo = new();
         private MoveDirection currentMoveDirection = MoveDirection.None;
 
+        public event Action Moved
+        {
+            add => this.MovedAction += value;
+            remove => this.MovedAction -= value;
+        }
+
+        private event Action? MovedAction = null;
+
         public enum MoveDirection
         {
             None,
@@ -71,12 +79,14 @@ namespace Game
             {
                 this.touchSwipeInfo.EndPosition = this.touchActions.Position.ReadValue<Vector2>();
                 this.currentMoveDirection = this.touchSwipeInfo.GetMoveDirection(this.minSwipeDistance);
+                this.MovedAction?.Invoke();
             };
 
             this.keyboardActions.Move.started += context =>
             {
                 this.keyboardInfo.Direction = context.ReadValue<Vector2>();
                 this.currentMoveDirection = this.keyboardInfo.MoveDirection;
+                this.MovedAction?.Invoke();
             };
             this.keyboardActions.Move.canceled += _ => this.currentMoveDirection = MoveDirection.None;
 
@@ -85,6 +95,7 @@ namespace Game
             {
                 this.mouseSwipeInfo.EndPosition = this.mouseActions.Position.ReadValue<Vector2>();
                 this.currentMoveDirection = this.mouseSwipeInfo.GetMoveDirection(this.minSwipeDistance);
+                this.MovedAction?.Invoke();
             };
         }
 
