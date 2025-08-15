@@ -8,6 +8,7 @@ public sealed class PlayerMoveState : PlayerState
 {
     private Vector3 destinationPoint = Vector3.zero;
     private bool winning = false;
+    private int maxMove = 1000;
 
     public PlayerMoveState(PlayerStateMachine stateMachine)
     {
@@ -18,15 +19,19 @@ public sealed class PlayerMoveState : PlayerState
 
     public override void Enter()
     {
-        var moveInput = this.InputHandler.MoveInput;
+        var moveInputInt = this.InputHandler.MoveInputInt;
         this.InputHandler.CancelMoveInputAction();
-
-        for (int i = 1; ; ++i)
+        if (moveInputInt == Vector3Int.zero)
         {
-            var nextPoint = this.Controller.transform.position + (i * moveInput);
+            this.StateMachine.SetStateToChangeTo(this.StateMachine.IdleState);
+        }
+
+        for (int i = 1; i < this.maxMove; ++i)
+        {
+            var nextPoint = this.Controller.transform.position + (i * moveInputInt);
             if (!Physics.Raycast(nextPoint, Vector3.down, out var hitInfo))
             {
-                this.destinationPoint = nextPoint - moveInput;
+                this.destinationPoint = nextPoint - moveInputInt;
                 this.winning = false;
                 break;
             }
@@ -34,14 +39,14 @@ public sealed class PlayerMoveState : PlayerState
             var hitGameObject = hitInfo.transform.gameObject;
             if (hitGameObject.CompareTag(this.Controller.StackManager.ObstacleTag))
             {
-                this.destinationPoint = nextPoint - moveInput;
+                this.destinationPoint = nextPoint - moveInputInt;
                 this.winning = false;
                 break;
             }
 
             if (hitGameObject.CompareTag(this.Controller.StackManager.WinningTag))
             {
-                this.destinationPoint = nextPoint - moveInput;
+                this.destinationPoint = nextPoint - moveInputInt;
                 this.winning = true;
                 break;
             }
@@ -82,8 +87,14 @@ public sealed class PlayerMoveState : PlayerState
             {
                 if (go.TryGetComponent<UnbrickController>(out var unbrickController))
                 {
-                    this.Controller.StackManager.RemoveBrick();
-                    unbrickController.Execute();
+                    if (this.Controller.StackManager.RemoveBrick())
+                    {
+                        unbrickController.Execute();
+                    }
+                    else
+                    {
+                        this.StateMachine.SetStateToChangeTo(this.StateMachine.LoseState);
+                    }
                 }
                 else
                 {

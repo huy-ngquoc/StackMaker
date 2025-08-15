@@ -35,5 +35,18 @@ namespace Game
         public StackManager StackManager => this.stackManager;
 
         public float Speed => this.speed;
+
+        private void Start()
+        {
+            if (Physics.Raycast(this.transform.position, Vector3.down, out var hitInfo))
+            {
+                var go = hitInfo.transform.gameObject;
+                if (go.CompareTag(this.StackManager.BrickTag))
+                {
+                    Object.Destroy(go);
+                    this.StackManager.AddBrick();
+                }
+            }
+        }
     }
 }
