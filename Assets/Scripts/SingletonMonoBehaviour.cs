@@ -52,40 +52,35 @@ public abstract class SingletonMonoBehaviour<T> : UnityMonoBehaviour
         lock (LockInstanceObj)
         {
             var newInstanceGameObject = newInstance.gameObject;
-            if (instance == null)
+            var currentInstanceGameObject = instance.UnityAccessRef(i => i.gameObject);
+            if (currentInstanceGameObject == null)
             {
                 instance = newInstance;
                 UnityObject.DontDestroyOnLoad(newInstanceGameObject);
                 return;
             }
 
-            var currentInstanceGameObject = instance.gameObject;
             var currentInstanceGameObjectName = currentInstanceGameObject.name;
             if (instance == newInstance)
             {
-                UnityDebug.LogWarning($"The same instance of {newInstanceTypeName} in Game Object \"{currentInstanceGameObjectName}\" has been assigned twice or more times!");
+                UnityDebug.Log($"The same instance of {newInstanceTypeName} in Game Object \"{currentInstanceGameObjectName}\" has been assigned twice or more times!");
                 return;
             }
 
             if (newInstanceGameObject == currentInstanceGameObject)
             {
-                UnityDebug.LogWarning($"There're two of more components of {newInstanceTypeName} in the same Game Object \"{currentInstanceGameObjectName}\"! " +
-                    $"By continuing, one of the components will be destroyed!");
-                UnityObject.Destroy(instance);
-                instance = newInstance;
+                UnityDebug.Log($"There're two of more components of {newInstanceTypeName} in the same Game Object \"{currentInstanceGameObjectName}\"! " +
+                    $"By continuing, the new components will be destroyed!");
+                UnityObject.Destroy(newInstance);
                 return;
             }
 
-            UnityDebug.LogAssertion($"There have already been two or more instances of {newInstanceTypeName}! " +
+            UnityDebug.Log($"There have already been two or more instances of {newInstanceTypeName}! " +
                 $"{newInstanceTypeName} is supposed to be a singleton. Hence, there must be only one instance of {newInstanceTypeName}! " +
                 $"The Game Object \"{currentInstanceGameObjectName}\" has first been initialized and assigned to the instance of {newInstanceTypeName}. " +
                 $"The Game Object \"{newInstanceGameObject}\" has been attempted to assign to the instance of {newInstanceTypeName}! " +
-                $"By continuing, the Game Object \"{currentInstanceGameObjectName}\" will be destroyed, and " +
-                $"the Game Object \"{newInstanceGameObject}\" will be assigned to the instance of {newInstanceTypeName}!");
-
-            instance = newInstance;
-            UnityObject.DontDestroyOnLoad(newInstanceGameObject);
-            UnityObject.Destroy(currentInstanceGameObject);
+                $"By continuing, the Game Object \"{newInstanceGameObject}\" will be destroyed!");
+            UnityObject.Destroy(newInstanceGameObject);
         }
     }
 }
