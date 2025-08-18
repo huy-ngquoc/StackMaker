@@ -1751,6 +1751,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelControllersPrefab:
   - {fileID: 2141808973520232293, guid: da49354f1e5e4b541a529a9577d4b308, type: 3}
+  - {fileID: 8979136042426749833, guid: 90ee7d531a7618b44b1734100f5e6858, type: 3}
   - {fileID: 8979136042426749833, guid: fc3498a6daa303d44b013c457a2e39be, type: 3}
   playerController: {fileID: 1267141143}
 --- !u!1 &965253964
