@@ -8,8 +8,8 @@ namespace Game
     public sealed class LevelController : MonoBehaviour
     {
         [SerializeField]
-        private Vector2Int startPosition = Vector2Int.zero;
+        private Vector3Int startPosition = Vector3Int.zero;
 
-        public Vector2Int StartPosition => this.startPosition;
+        public Vector3Int StartPosition => this.startPosition;
     }
 }
