@@ -8,8 +8,8 @@ namespace Game
     public sealed class PlayerController : MonoBehaviour
     {
         [SerializeReference]
-        [ResolveComponentInChildren]
-        private Animator animator = null!;
+        [ResolveComponentInParent]
+        private GameplayManager gameplayManager = null!;
 
         [SerializeReference]
         [ResolveComponent]
@@ -23,16 +23,22 @@ namespace Game
         [ResolveComponent]
         private StackManager stackManager = null!;
 
+        [SerializeReference]
+        [ResolveComponentInChildren]
+        private Animator animator = null!;
+
         [SerializeField]
         private float speed = 10;
 
-        public Animator Animator => this.animator;
+        public GameplayManager GameplayManager => this.gameplayManager;
 
         public PlayerInputHandler InputHandler => this.inputHandler;
 
         public PlayerStateMachine StateMachine => this.stateMachine;
 
         public StackManager StackManager => this.stackManager;
+
+        public Animator Animator => this.animator;
 
         public float Speed => this.speed;
 

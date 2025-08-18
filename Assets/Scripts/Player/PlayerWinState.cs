@@ -39,7 +39,7 @@ public sealed class PlayerWinState : PlayerState
 
         if (this.stateTimer <= 0)
         {
-            // TODO: Do stuff
+            this.GameplayManager.EndWin();
             this.StateMachine.SetStateToChangeTo(this.StateMachine.IdleState);
         }
     }

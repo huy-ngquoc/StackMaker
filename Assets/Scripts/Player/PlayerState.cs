@@ -10,6 +10,8 @@ public abstract class PlayerState
 
     public PlayerInputHandler InputHandler => this.Controller.InputHandler;
 
+    public GameplayManager GameplayManager => this.Controller.GameplayManager;
+
     public virtual void Enter()
     {
     }

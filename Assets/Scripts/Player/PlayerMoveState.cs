@@ -6,9 +6,9 @@ using UnityEngine;
 
 public sealed class PlayerMoveState : PlayerState
 {
+    private readonly int maxMove = 1000;
     private Vector3 destinationPoint = Vector3.zero;
     private bool winning = false;
-    private int maxMove = 1000;
 
     public PlayerMoveState(PlayerStateMachine stateMachine)
     {

@@ -11,11 +11,16 @@ namespace Game
         [ResolveComponent]
         private AudioSource audioSource = null!;
 
+        [field: Header("Audio clips")]
+
+        [field: SerializeReference]
+        private AudioClip clickAudioClip = null!;
+
         protected override SoundManager LocalInstance => this;
 
-        public void PlaySound(AudioClip audioClip)
+        public void PlayClickSound()
         {
-            this.audioSource.PlayOneShot(audioClip);
+            this.audioSource.PlayOneShot(this.clickAudioClip);
         }
     }
 }

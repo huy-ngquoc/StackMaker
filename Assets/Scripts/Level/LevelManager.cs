@@ -5,7 +5,7 @@ namespace Game
     using System.Collections.Generic;
     using UnityEngine;
 
-    public sealed class LevelManager : SingletonMonoBehaviour<LevelManager>
+    public sealed class LevelManager : MonoBehaviour
     {
         [SerializeReference]
         private List<LevelController> levelControllersPrefab = new();
@@ -17,8 +17,6 @@ namespace Game
         private LevelController? currentLevelController = null;
 
         public int AmountLevels => this.levelControllersPrefab.Count;
-
-        protected override LevelManager LocalInstance => this;
 
         public bool LoadLevel(int levelIdx)
         {
@@ -56,7 +54,7 @@ namespace Game
             }
         }
 
-        protected override void OnAwake()
+        private void Awake()
         {
             this.playerController.gameObject.SetActive(false);
         }
